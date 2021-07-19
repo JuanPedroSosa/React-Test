@@ -35,6 +35,25 @@ function App() {
 		<BrowserRouter>
     	<div className="App">
 			<Navbar userName={username} keys={"1"}/>
+			<Redirect
+      	from="/"
+        to="/app-midex" />
+			<Switch>
+			<Route
+        path="/app-midex"
+        component={ServiceList} />
+			<Route
+        path="/inflado"
+        component={TireInflator} />
+			<Route
+        path="/termo"
+        component={Thermos} />
+			<Route
+        path="/qr"
+        component={QrContainer} />
+      <Route component={PageError} />
+			</Switch>
+
 			</div>
 		</BrowserRouter>
   );
