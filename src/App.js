@@ -3,13 +3,13 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
 //import { MainBanner } from "./components/MainBanner";
-//import LoginForm from "./Login/LoginForm";
+import LoginForm from "./Login/LoginForm";
 import {Navbar} from "./components/Navbar";
-//import {ServiceList} from "./Home/ServiceList";
-//import {TireInflator} from "./TireInflator/TireInflator";
-//import {Thermos} from "./Thermos/Thermos";
-//import QrContainer from "./ReaderQR/ReaderQR";
-//import PageError from './PageError/PageError';
+import {ServiceList} from "./Home/ServiceList";
+import {TireInflator} from "./TireInflator/TireInflator";
+import {Thermos} from "./Thermos/Thermos";
+import QrContainer from "./ReaderQR/ReaderQR";
+import PageError from './PageError/PageError';
 import useToken from './useToken';
 
 function App() {
