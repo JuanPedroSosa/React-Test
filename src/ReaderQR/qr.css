@@ -1,13 +1,13 @@
 /* We all love border radiuses */
-.qr-image-wrapper section {
+/*.qr-image-wrapper section {
 	border-radius: 16px;
 	border:20px solid white;
-}
+}*/
 
 /* To get rid of the default red box-shadow */
-.qr-image-wrapper section div {
+/*.qr-image-wrapper section div {
   box-shadow: unset !important;
-}
+}*/
 
 .boxQR {
 		--b:15px;   /* thickness of the border */
