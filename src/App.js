@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
-import { MainBanner } from "./components/MainBanner";
-import LoginForm from "./Login/LoginForm";
+//import { MainBanner } from "./components/MainBanner";
+//import LoginForm from "./Login/LoginForm";
 import {Navbar} from "./components/Navbar";
-import {ServiceList} from "./Home/ServiceList";
-import {TireInflator} from "./TireInflator/TireInflator";
-import {Thermos} from "./Thermos/Thermos";
-import QrContainer from "./ReaderQR/ReaderQR";
-import PageError from './PageError/PageError';
+//import {ServiceList} from "./Home/ServiceList";
+//import {TireInflator} from "./TireInflator/TireInflator";
+//import {Thermos} from "./Thermos/Thermos";
+//import QrContainer from "./ReaderQR/ReaderQR";
+//import PageError from './PageError/PageError';
 import useToken from './useToken';
 
 function App() {
@@ -34,6 +34,17 @@ function App() {
   return (
 		<BrowserRouter>
     	<div className="App">
+			<Navbar userName={username} keys={"1"}/>
+			</div>
+		</BrowserRouter>
+  );
+}
+
+export default App;
+
+/*
+		<BrowserRouter>
+    	<div className="App">
 			<Navbar userName={username} keys={token}/>
 			<Redirect
       	from="/"
@@ -55,7 +66,5 @@ function App() {
 			</Switch>
 			</div>
 		</BrowserRouter>
-  );
-}
 
-export default App;
+*/

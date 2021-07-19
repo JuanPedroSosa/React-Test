@@ -79,7 +79,7 @@ class LoginForm extends Component {
                 </div>
                 <button className="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit">Ingresar</button>
                 <div className="text-center">
-                  <a className="small" href="#">Forgot password?</a></div>
+                  <a className="small">Forgot password?</a></div>
               </form>
             </div>
           </div>
