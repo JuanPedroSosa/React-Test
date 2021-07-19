@@ -1,26 +1,28 @@
 {
   "files": {
-    "main.css": "/React-Test/static/css/main.a617e044.chunk.css",
-    "main.js": "/React-Test/static/js/main.63665de4.chunk.js",
-    "main.js.map": "/React-Test/static/js/main.63665de4.chunk.js.map",
-    "runtime-main.js": "/React-Test/static/js/runtime-main.e339ad4c.js",
-    "runtime-main.js.map": "/React-Test/static/js/runtime-main.e339ad4c.js.map",
+    "main.css": "/React-Test/static/css/main.b6f02acb.chunk.css",
+    "main.js": "/React-Test/static/js/main.72a3ce49.chunk.js",
+    "main.js.map": "/React-Test/static/js/main.72a3ce49.chunk.js.map",
+    "runtime-main.js": "/React-Test/static/js/runtime-main.4f014833.js",
+    "runtime-main.js.map": "/React-Test/static/js/runtime-main.4f014833.js.map",
     "static/css/2.4be38407.chunk.css": "/React-Test/static/css/2.4be38407.chunk.css",
-    "static/js/2.715431aa.chunk.js": "/React-Test/static/js/2.715431aa.chunk.js",
-    "static/js/2.715431aa.chunk.js.map": "/React-Test/static/js/2.715431aa.chunk.js.map",
-    "static/js/3.0c745b80.chunk.js": "/React-Test/static/js/3.0c745b80.chunk.js",
-    "static/js/3.0c745b80.chunk.js.map": "/React-Test/static/js/3.0c745b80.chunk.js.map",
+    "static/js/2.cf3d4eda.chunk.js": "/React-Test/static/js/2.cf3d4eda.chunk.js",
+    "static/js/2.cf3d4eda.chunk.js.map": "/React-Test/static/js/2.cf3d4eda.chunk.js.map",
+    "static/js/3.2e86a5db.chunk.js": "/React-Test/static/js/3.2e86a5db.chunk.js",
+    "static/js/3.2e86a5db.chunk.js.map": "/React-Test/static/js/3.2e86a5db.chunk.js.map",
     "index.html": "/React-Test/index.html",
     "static/css/2.4be38407.chunk.css.map": "/React-Test/static/css/2.4be38407.chunk.css.map",
-    "static/css/main.a617e044.chunk.css.map": "/React-Test/static/css/main.a617e044.chunk.css.map",
-    "static/js/2.715431aa.chunk.js.LICENSE.txt": "/React-Test/static/js/2.715431aa.chunk.js.LICENSE.txt",
-    "static/media/logo.6ce24c58.svg": "/React-Test/static/media/logo.6ce24c58.svg"
+    "static/css/main.b6f02acb.chunk.css.map": "/React-Test/static/css/main.b6f02acb.chunk.css.map",
+    "static/js/2.cf3d4eda.chunk.js.LICENSE.txt": "/React-Test/static/js/2.cf3d4eda.chunk.js.LICENSE.txt",
+    "static/media/inflador.efcb4dfd.png": "/React-Test/static/media/inflador.efcb4dfd.png",
+    "static/media/logo.6ce24c58.svg": "/React-Test/static/media/logo.6ce24c58.svg",
+    "static/media/termo.8ad51f1f.png": "/React-Test/static/media/termo.8ad51f1f.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.e339ad4c.js",
+    "static/js/runtime-main.4f014833.js",
     "static/css/2.4be38407.chunk.css",
-    "static/js/2.715431aa.chunk.js",
-    "static/css/main.a617e044.chunk.css",
-    "static/js/main.63665de4.chunk.js"
+    "static/js/2.cf3d4eda.chunk.js",
+    "static/css/main.b6f02acb.chunk.css",
+    "static/js/main.72a3ce49.chunk.js"
   ]
 }
