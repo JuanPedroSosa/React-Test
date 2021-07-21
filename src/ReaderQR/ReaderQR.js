@@ -1,12 +1,15 @@
 import React, { Component } from "react";
+import { Redirect, Link } from "react-router-dom";
 import QrReader from "react-qr-scanner";
+import { Acciones } from "../Acciones/Acciones";
 // import "./qr.css";
+const MESSAGE_DEFAULT = "no hay resultados";
 
 class QrContainer extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			result: "ok"
+			result: MESSAGE_DEFAULT
 		}
 		this.handleScan = this.handleScan.bind(this);
 	}
@@ -16,11 +19,6 @@ class QrContainer extends Component {
 		if (result != null)
 			this.setState({result: result.text});
 		//this.setState((result != null) ? result.text : "");
-
-
-		//this.setState({
-		//	result:  (!result) ? result.text: ""
-		//})
 	}
 
 	handleError(error) {
@@ -52,19 +50,19 @@ class QrContainer extends Component {
 		// className="qr-image-wrapper"
 	return (
 		<React.Fragment>
+			{this.state.result == MESSAGE_DEFAULT &&
 			<div style={camStyle}>
 				<QrReader
 				delay={100}
 				style={previweStyle}
 				onError={this.handleError}
 				onScan={this.handleScan}
-				showViewFinder={false}
-
 				/>
-			</div>
-			<p style={textStyle}>
+				<p style={textStyle}>
 				{this.state.result}
 			</p>
+			</div>}
+			{this.state.result != MESSAGE_DEFAULT && <Acciones/>}
 		</React.Fragment>
 	)
 	}

@@ -9,6 +9,7 @@ import {ServiceList} from "./Home/ServiceList";
 import {TireInflator} from "./TireInflator/TireInflator";
 import {Thermos} from "./Thermos/Thermos";
 import QrContainer from "./ReaderQR/ReaderQR";
+import {Acciones} from "./Acciones/Acciones";
 import PageError from './PageError/PageError';
 import useToken from './useToken';
 
@@ -25,9 +26,9 @@ function App() {
 	}
 
 	console.log("verifico: " + token);
-  //if(!token) {
-  //  return <LoginForm setToken={setToken} onAddUsers={handleAddUsers}/>
-	//}
+  // if(!token) {
+  //   return <LoginForm setToken={setToken} onAddUsers={handleAddUsers}/>
+	// }
 	console.log("listo" + token);
 // <LoginForm onAddUsers={handleAddUsers}/>
 // <MainBanner userName={username} keys={token}/>
@@ -38,7 +39,7 @@ function App() {
 			<Redirect
       	from="/"
         to="/app-midex" />
-			<Switch>
+	  		<Switch>
 			<Route
         path="/app-midex"
         component={ServiceList} />
@@ -51,6 +52,9 @@ function App() {
 			<Route
         path="/qr"
         component={QrContainer} />
+			<Route
+        path="/acciones"
+        component={Acciones} />
       <Route component={PageError} />
 			</Switch>
 
