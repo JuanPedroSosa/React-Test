@@ -1,7 +1,8 @@
 {
   "name": "app-midex",
   "version": "0.1.0",
-  "private": true,
+	"private": true,
+	"homepage": "https://JuanPedroSosa.github.io/React-Test",
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
