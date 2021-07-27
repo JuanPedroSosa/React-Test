@@ -6,13 +6,13 @@
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
-		"@testing-library/user-event": "^12.8.3",
-		"gh-pages": "^3.2.3",
+    "@testing-library/user-event": "^12.8.3",
     "bootstrap": "^5.0.2",
+    "gh-pages": "^3.2.3",
+    "modern-react-qr-reader": "^1.0.12",
     "react": "^17.0.2",
     "react-countdown": "^2.3.2",
     "react-dom": "^17.0.2",
-    "react-qr-scanner": "^1.0.0-alpha.7",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "web-vitals": "^1.1.2"
@@ -20,7 +20,7 @@
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
+    "start": "HTTPS=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
