@@ -1,0 +1,13 @@
+{
+  "development": {
+    "urlAPI": "http://localhost",
+    "port": 8080
+  },
+  "test": {
+    "urlAPI": "http://localhost",
+    "port": 8080
+  },
+  "production": {
+		"urlAPI": "https://app-telcon-prueba.herokuapp.com"
+  }
+}

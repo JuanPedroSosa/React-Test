@@ -29,3 +29,6 @@
   transform: scale(1.8);
 }
 */
+.rounded-circle {
+  border-radius: 50% !important;
+}

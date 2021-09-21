@@ -1,41 +1,70 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import logo from './logo.svg';
+import inflador from "./MP300PR_AMARILLO.jpg";
 import './App.css';
 //import { MainBanner } from "./components/MainBanner";
 import LoginForm from "./Login/LoginForm";
-import {Navbar} from "./components/Navbar";
+//import {Navbar} from "./components/Navbar";
 import {ServiceList} from "./Home/ServiceList";
 import {TireInflator} from "./TireInflator/TireInflator";
 import {Thermos} from "./Thermos/Thermos";
 import QrContainer from "./ReaderQR/ReaderQR";
 import {Acciones} from "./Acciones/Acciones";
 import PageError from './PageError/PageError';
-import useToken from './useToken';
+import APIServerContext, {connServer} from "./settings";
+import {ProviderUsuario} from "./registeredUser";
+const modo = process.env.NODE_ENV || 'development';
+const url =  modo === 'development' ? `${connServer.urlAPI}:${connServer.port}` : `${connServer.urlAPI}`;
+const urlAPISessions = `${url}/api/sessions/client`;
 
 function App() {
 	const [username, setUserName] = useState(""); // Hook
 	const [password, setPassword] = useState("");
-	//const [token, setToken] = useState();
-	const { token, setToken } = useToken();
-
+	const [token, setToken] = useState("");
+	const [state, setState] = useState({});
+	//const { token, setToken } = useToken();
+// ver validar celular token
 	const handleAddUsers = usuario => {
 		console.log(`add users: ${usuario}`);
 		setUserName(usuario.username);
 		setPassword(usuario.password);
+		fetch(urlAPISessions, {
+			method: 'POST', // or 'PUT'
+			body: JSON.stringify({
+				"celular": usuario.username,
+				}), // data can be `string` or {object}!
+			headers:{
+				'Content-Type': 'application/json'
+			}
+		}).then(res => res.json())
+		.catch(error => console.error('Error:', error))
+		.then(response => {
+			console.log('Response session Success:', response);
+			if (response !== undefined) {
+				console.log("usuario ingresado:", response);
+				setState({...state, response});
+				setToken(response.jwt);
+			}
+
+			else new Error("Token no encontrado");
+		});
 	}
 
 	console.log("verifico: " + token);
-  // if(!token) {
-  //   return <LoginForm setToken={setToken} onAddUsers={handleAddUsers}/>
-	// }
-	console.log("listo" + token);
+  if (!token) {
+    return <LoginForm onAddUsers={handleAddUsers}/>
+	}
+	console.log("listo: " + token);
+	console.log("state: ", state);
 // <LoginForm onAddUsers={handleAddUsers}/>
 // <MainBanner userName={username} keys={token}/>
   return (
+		<APIServerContext.Provider value={connServer} token={token}>
+			<ProviderUsuario value={state}>
 		<BrowserRouter>
     	<div className="App">
-			<Navbar userName={username} keys={"1"}/>
+			{/*<Navbar userName={username} keys={"1"}/>*/}
 			<Redirect
       	from="/"
         to="/app-midex" />
@@ -53,15 +82,24 @@ function App() {
         path="/qr"
         component={QrContainer} />
 			<Route
+			path="/login"
+			render={(props) => (
+				<LoginForm {...props} onAddUsers={handleAddUsers} />
+			)} />
+
+			{/*<Route
         path="/acciones"
-        component={Acciones} />
+			component={Acciones} />*/}
       <Route component={PageError} />
 			</Switch>
 
 			</div>
 		</BrowserRouter>
+		</ProviderUsuario>
+		</APIServerContext.Provider>
   );
 }
+
 
 export default App;
 
