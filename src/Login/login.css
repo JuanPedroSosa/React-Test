@@ -5,7 +5,7 @@
 
 .login,
 .image {
-  min-height: 100vh;
+  /*min-height: 100vh;*/
 }
 
 .bg-image {
@@ -15,7 +15,12 @@
 }
 
 .login-heading {
-  font-weight: 300;
+	font-weight: 500;
+	color: red;
+}
+
+.login-heading2 {
+	font-weight: 400;
 }
 
 .btn-login {

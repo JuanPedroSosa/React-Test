@@ -71,7 +71,7 @@ export const Acciones = props => {
 		.catch(error => console.error('Error:', error))
 		.then(response => {
 			console.log('Success:', response);
-			alert(response);
+			alert(response.message);
 		});
 
 		setInflar(true);

@@ -5,6 +5,7 @@ import inflador from "./MP300PR_AMARILLO.jpg";
 import './App.css';
 //import { MainBanner } from "./components/MainBanner";
 import LoginForm from "./Login/LoginForm";
+import ResetPasswordForm from "./ResetPassword/ResetPasswordForm";
 //import {Navbar} from "./components/Navbar";
 import {ServiceList} from "./Home/ServiceList";
 import {TireInflator} from "./TireInflator/TireInflator";
@@ -68,29 +69,32 @@ function App() {
 			<Redirect
       	from="/"
         to="/app-midex" />
-	  		<Switch>
-			<Route
-        path="/app-midex"
-        component={ServiceList} />
-			<Route
-        path="/inflado"
-        component={TireInflator} />
-			<Route
-        path="/termo"
-        component={Thermos} />
-			<Route
-        path="/qr"
-        component={QrContainer} />
-			<Route
-			path="/login"
-			render={(props) => (
-				<LoginForm {...props} onAddUsers={handleAddUsers} />
-			)} />
-
-			{/*<Route
-        path="/acciones"
-			component={Acciones} />*/}
-      <Route component={PageError} />
+	  	<Switch>
+				<Route
+      	  path="/app-midex"
+      	  component={ServiceList} />
+				<Route
+					exact
+      	  path="/inflado"
+      	  component={TireInflator} />
+				<Route
+      	  path="/termo"
+      	  component={Thermos} />
+				<Route
+      	  path="/qr"
+      	  component={QrContainer} />
+				<Route
+				path="/login"
+				render={(props) => (
+					<LoginForm {...props} onAddUsers={handleAddUsers} />
+				)} />
+				<Route
+      	  path="/forgot"
+      	  component={ResetPasswordForm} />
+				{/*<Route
+      	  path="/acciones"
+				component={Acciones} />*/}
+      	<Route component={PageError} />
 			</Switch>
 
 			</div>

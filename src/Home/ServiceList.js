@@ -13,7 +13,7 @@ export const ServiceList = props => {
 	<h5 className="font-weight-bold text-white">Servicios</h5>
 	</div>
 	<div className="col">
-	<h5 className="font-weight-bold text-white">Saldo: ${Number.parseFloat(usuario.response.client.saldo).toFixed(2)}</h5>
+	<h5 className="font-weight-bold text-white">Saldo: ${Number.parseFloat(usuario.response !== undefined ? usuario.response.client.saldo : 0).toFixed(2)}</h5>
 	</div>
 </div>
 {/*<h5 style={{"background": "#ff4d4d", width: "100%"}} className="font-weight-bold text-white">Servicios</h5>*/}
