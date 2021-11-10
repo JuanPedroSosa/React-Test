@@ -5,8 +5,8 @@ import ResetPasswordForm from "../ResetPassword/ResetPasswordForm";
 import RegisterForm from "../Register/RegisterForm";
 
 class LoginForm extends Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.state = {
 			username: '',
 			password: '',
@@ -20,6 +20,7 @@ class LoginForm extends Component {
 		this.handleOlvidasteClave = this.handleOlvidasteClave.bind(this);
 		this.handleRegistrarse = this.handleRegistrarse.bind(this);
 		this.handleLogin = this.handleLogin.bind(this);
+		this.msg = this.props.msg;
 	}
 
 	handleInput (e) {
@@ -76,6 +77,7 @@ class LoginForm extends Component {
 										<hr/>
 										<h6 className="login-heading2 mb-4">Bienvenido a la APP-MIDEX</h6>
 			              <form onSubmit={this.handleSubmit}>
+											{this.msg !== "a" && <alert className="warning">{this.msg}</alert>}
 			                <div className="form-label-group">
 												<input
 												name="username"

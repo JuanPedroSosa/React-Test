@@ -30,6 +30,18 @@ class RegisterForm extends Component {
 		})
 	}
 
+	handleInputCel (e) {
+		let code = (e.target.validity.valid) ? e.target.value : this.state.celular;
+		const {name, value} = e.target;
+		console.log("event: " + e.target.name, " - ", e.target.value, " : ", code);
+
+		if (value === "")
+			code = "";
+
+		this.setState({
+			[name] : code
+		})
+	}
 	async handleSubmit(e) {
 		// evita que se refresque la pantalla
 		e.preventDefault();
@@ -77,7 +89,7 @@ class RegisterForm extends Component {
 			            <div className="col-md-9 col-lg-8 mx-auto">
 			              <h3 className="login-heading mb-4">APP-MIDEX</h3>
 										<hr/>
-										<h6 className="login-heading2 mb-2">Registrarte</h6>
+										<h6 className="login-heading2 mb-2"><b>Registrarte</b></h6>
 										{this.state.msg !== "" && <div className="alert alert-warning mb-2">{this.state.msg}</div>}
 			              <form onSubmit={this.handleSubmit}>
 										<div className="form-label-group">
@@ -113,7 +125,10 @@ class RegisterForm extends Component {
 											<div className="form-label-group">
 												<input
 												name="celular"
-												onChange= {this.handleInput} // {(event, newValue) => this.setState({username:newValue})}
+												onInput={this.handleInputCel.bind(this)}
+												pattern="[0-9]*"
+												value={this.state.celular}
+												//onChange= {this.handleInput} // {(event, newValue) => this.setState({username:newValue})}
 												className="form-control"
 												placeholder="número de celular"
 												type="text" id="inputCel"

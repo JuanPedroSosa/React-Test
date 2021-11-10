@@ -24,6 +24,7 @@ function App() {
 	const [password, setPassword] = useState("");
 	const [token, setToken] = useState("");
 	const [state, setState] = useState({});
+	const [info, setInfo] = useState("");
 	//const { token, setToken } = useToken();
 // ver validar celular token
 	const handleAddUsers = usuario => {
@@ -42,19 +43,23 @@ function App() {
 		.catch(error => console.error('Error:', error))
 		.then(response => {
 			console.log('Response session Success:', response);
-			if (response !== undefined) {
+			if (response !== undefined && response.status !== "error") {
 				console.log("usuario ingresado:", response);
 				setState({...state, response});
 				setToken(response.jwt);
+				setInfo("");
 			}
-
-			else new Error("Token no encontrado");
+			else {
+				console.log("err autenticacion:",  response.message);
+				setInfo("Usuario o contraseña incorrecta");
+				//new Error("Token no encontrado");
+			}
 		});
 	}
 
 	console.log("verifico: " + token);
   if (!token) {
-    return <LoginForm onAddUsers={handleAddUsers}/>
+    return <LoginForm onAddUsers={handleAddUsers} msg={info}/>
 	}
 	console.log("listo: " + token);
 	console.log("state: ", state);
