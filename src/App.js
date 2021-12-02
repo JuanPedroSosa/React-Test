@@ -25,6 +25,7 @@ function App() {
 	const [token, setToken] = useState("");
 	const [state, setState] = useState({});
 	const [info, setInfo] = useState("");
+	const [autorizado, setAutorizado] = useState(false);
 	//const { token, setToken } = useToken();
 // ver validar celular token
 	const handleAddUsers = usuario => {
@@ -50,7 +51,8 @@ function App() {
 				setInfo("");
 			}
 			else {
-				console.log("err autenticacion:",  response.message);
+				if (response.message)
+					console.log("err autenticacion:",  response.message);
 				setInfo("Usuario o contraseña incorrecta");
 				//new Error("Token no encontrado");
 			}
@@ -71,6 +73,7 @@ function App() {
 		<BrowserRouter>
     	<div className="App">
 			{/*<Navbar userName={username} keys={"1"}/>*/}
+
 			<Redirect
       	from="/"
         to="/app-midex" />
@@ -91,7 +94,7 @@ function App() {
 				<Route
 				path="/login"
 				render={(props) => (
-					<LoginForm {...props} onAddUsers={handleAddUsers} />
+					<LoginForm {...props} onAddUsers={handleAddUsers} msg={info}/>
 				)} />
 				<Route
       	  path="/forgot"

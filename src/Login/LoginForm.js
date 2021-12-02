@@ -77,7 +77,7 @@ class LoginForm extends Component {
 										<hr/>
 										<h6 className="login-heading2 mb-4">Bienvenido a la APP-MIDEX</h6>
 			              <form onSubmit={this.handleSubmit}>
-											{this.msg !== "a" && <alert className="warning">{this.msg}</alert>}
+											{this.props.msg && <alert className="alert alert-warning">{this.props.msg}</alert>}
 			                <div className="form-label-group">
 												<input
 												name="username"
