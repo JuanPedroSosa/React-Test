@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import CryptoJS from "crypto-js";
 import "./login.css";
 import ResetPasswordForm from "../ResetPassword/ResetPasswordForm";
 import RegisterForm from "../Register/RegisterForm";
+import { connServer } from "../settings";
+import { QueryStringContext } from "../queryStringContext";
 
 class LoginForm extends Component {
+	static contextType = QueryStringContext;
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -21,6 +25,22 @@ class LoginForm extends Component {
 		this.handleRegistrarse = this.handleRegistrarse.bind(this);
 		this.handleLogin = this.handleLogin.bind(this);
 		this.msg = this.props.msg;
+
+	}
+
+	componentDidMount() {
+		const query = window.location.search.substring(1);
+		if (query !== undefined) {
+			console.log(query);
+			const qsDecode = CryptoJS.AES.decrypt(query, connServer.queryKey);
+			const originalText = qsDecode.toString(CryptoJS.enc.Utf8);
+			this.context.setQueryStringQR(originalText);
+		}
+		else this.context.setQueryStringQR("");
+		console.log("Login qs: ", this.context.queryStringQR);
+	}
+
+	componentDidUpdate() {
 	}
 
 	handleInput (e) {
@@ -48,9 +68,12 @@ class LoginForm extends Component {
 	async handleSubmit(e) {
 		// evita que se refresque la pantalla
 		e.preventDefault();
+
+
 		//this.setState({username:'hola'})
 		console.log(`login submit: ${this.state.username}`);
 		this.props.onAddUsers(this.state);
+
 		// const token = await loginUser({
     //   username: this.state.username,
     //   password: this.state.password
@@ -58,6 +81,7 @@ class LoginForm extends Component {
 		// console.log(`login token: ${JSON.stringify(token)}`);
 		// this.props.setToken(token.token);
 		console.log("fin login");
+		//this.props.history.push("/app-midex");
 	}
 
 	render() {
@@ -77,9 +101,10 @@ class LoginForm extends Component {
 										<hr/>
 										<h6 className="login-heading2 mb-4">Bienvenido a la APP-MIDEX</h6>
 			              <form onSubmit={this.handleSubmit}>
-											{this.props.msg && <alert className="alert alert-warning">{this.props.msg}</alert>}
+											{this.props.msg && <alert className="alert alert-warning mb-1">{this.props.msg}</alert>}
 			                <div className="form-label-group">
 												<input
+												autoFocus
 												name="username"
 												onChange= {this.handleInput} // {(event, newValue) => this.setState({username:newValue})}
 												className="form-control"

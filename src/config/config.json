@@ -1,13 +1,25 @@
 {
-  "development": {
+	"development": {
+    "urlAPI": "http://192.168.0.13",
+		"port": 8080,
+		"queryKey": "2020Natasha"
+  },
+  "development2": {
     "urlAPI": "http://localhost",
     "port": 8080
   },
   "test": {
     "urlAPI": "http://localhost",
-    "port": 8080
+		"port": 8080,
+		"queryKey": "2020Natasha"
   },
   "production": {
-		"urlAPI": "https://app-telcon-prueba.herokuapp.com"
+		"urlAPI": "https://app-telcon-prueba.herokuapp.com",
+		"queryKey": "2020Natasha"
+	},
+	"development3": {
+		"urlAPI": "https://4a70-2800-af0-1098-145-5c45-347f-5b01-aa4a.ngrok.io",
+		"port": 443,
+		"queryKey": "2020Natasha"
   }
 }

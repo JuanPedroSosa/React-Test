@@ -17,8 +17,8 @@ export const Card = props => (
 		<img src={props.imageSource} alt={props.title} className="img-fluid mr-4 rounded-circle" style={{width:90}} />
 		</div>
 		<div className="row m-0">
-		<Link to={"/qr"} className="btn btn-primary ext-white p-3 my-2">
-		Pagar
+		<Link to={"/acciones"} className="btn btn-primary ext-white p-3 my-2">
+		COMPRAR
 		</Link>
 		</div>
 		<div className="row m-0">

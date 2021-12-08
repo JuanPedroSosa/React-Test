@@ -1,13 +1,18 @@
 import React, { Component } from "react";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import QrReader from "modern-react-qr-reader";
 import { Acciones } from "../Acciones/Acciones";
-import { NavbarSecondary } from "../components/NavbarSecondary";
+import { HeaderSecondary } from "../components/HeaderSecondary";
+import { Navbar } from "../components/Navbar";
+import { QueryStringContext } from "../queryStringContext";
+import { connServer } from "../settings";
+import CryptoJS from "crypto-js";
 // import "./qr.css";
 const MESSAGE_DEFAULT = "no hay resultados";
 const MESSAGE_QR = "Escaneá código QR";
 
 class QrContainer extends Component {
+	static contextType = QueryStringContext;
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -25,6 +30,19 @@ class QrContainer extends Component {
 			//}));
 			console.log("handleScan: ",  result);
 			this.setState({result: result});
+			// recibimos la qs encriptada
+			const query = result.split("?");
+
+			if (query.lenght < 2) {
+				console.log("Se esperan al menos 2");
+				this.context.setQueryStringQR("");
+			}
+			else {
+				const qsDecode = CryptoJS.AES.decrypt(query[1], connServer.queryKey);
+				const originalText = qsDecode.toString(CryptoJS.enc.Utf8);
+				this.context.setQueryStringQR(originalText);
+				console.log("ReaderQR qs: " + this.context.queryStringQR);
+			}
 		}
 		//this.setState((result != null) ? result.text : "");
 	}
@@ -38,19 +56,19 @@ class QrContainer extends Component {
 	}
 
 	render() {
-		const previweStyle = {
+		/*const previweStyle = {
 			width: 320,
 			height: 440,
 			display: "flex",
 			"justify-content": "center"
-		}
+		}*/
 
-		const camStyle = {
+		/*const camStyle = {
 			display: "flex",
 			"justify-content": "center",
 			marginTop: "-50px",
 			borderRadius: 100,
-		}
+		}*/
 
 		const textStyle = {
 			fontSize: "30px",
@@ -64,10 +82,14 @@ class QrContainer extends Component {
 		// qrread -> style={previweStyle}
 	return (
 		<React.Fragment>
-			{this.state.result == MESSAGE_DEFAULT &&
+			{this.state.result === MESSAGE_DEFAULT &&
 				<div>
-					<NavbarSecondary/>
-					<div class="alert alert-danger font-weight-bold my-0" role="alert"><h1>{MESSAGE_QR}</h1></div>
+					<Navbar/>
+					<HeaderSecondary/>
+					{/*<div class="alert alert-danger font-weight-bold my-0" role="alert"><h1>{MESSAGE_QR}</h1></div>*/}
+					<div className="row">
+						<strong>{MESSAGE_QR}</strong>
+					</div>
 					<QrReader
 					delay={100}
 					facingMode={"environment"}
@@ -80,7 +102,8 @@ class QrContainer extends Component {
 					</p>
 				</div>
 			}
-			{ this.state.result !== MESSAGE_DEFAULT && <Acciones qr={this.state.result}/>}
+			{ this.state.result !== MESSAGE_DEFAULT && <Acciones qr={this.state.result} />}
+			{/* this.state.result !== MESSAGE_DEFAULT && <Acciones qr={this.state.result}/>*/}
 		</React.Fragment>)
 	}
 }
