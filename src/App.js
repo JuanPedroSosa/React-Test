@@ -61,7 +61,7 @@ function App() {
 		}).then(res => res.json())
 		.catch(error => {
 			console.error('Error:', error);
-			setInfo("Usuario o contraseña incorrecta" + urlAPISessions);
+			setInfo("Usuario o contraseña incorrecta"); // + urlAPISessions
 			setAutorizado(false);
 		} )
 		.then(response => {
