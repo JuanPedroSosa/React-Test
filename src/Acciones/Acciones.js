@@ -83,8 +83,8 @@ export const Acciones = props => {
 		<>
 		<img src={logo} style={{"width": 100, "height": 100}} alt="finalizado"/>
 		<div className="row d-block px-3">
-		<Link to="/app-midex" className="btn btn-primary btn-lg text-white text-uppercase font-weight-bold my-3" onClick={CleanQS}>Inicio</Link>
-		<Link to="/logout" className="btn btn-secondary btn-lg text-white text-uppercase font-weight-bold my-3" onClick={CleanQS}>Cerrar sesión</Link>
+		<Link to="/app-midex" className="btn btn-primary btn-lg text-white text-uppercase font-weight-bold my-3 p-3" onClick={CleanQS}>Inicio</Link>
+		<Link to="/logout" className="btn btn-secondary btn-lg text-white text-uppercase font-weight-bold my-3 p-3" onClick={CleanQS}>Cerrar sesión</Link>
 		</div>
 		</>
 	);
@@ -191,7 +191,7 @@ export const Acciones = props => {
 			</div>
 			<div className="row">
 			{/*<div class="alert alert-danger font-weight-bold my-0" role="alert"><h1>{MESSAGE_START}</h1></div>*/}
-			<button className="btn btn-primary btn-lg text-uppercase font-weight-bold text-white text-uppercase my-3" disabled={disable} onClick={handleComenzar}>Inflar</button>
+			<button className="btn btn-primary btn-lg text-uppercase font-weight-bold text-white text-uppercase my-3 p-3" disabled={disable} onClick={handleComenzar}>Inflar</button>
 			</div>
 			{ isLoading && <Ellipsis size={60} color={"#ff4d4d"}/> }
 		</div>
@@ -205,7 +205,7 @@ export const Acciones = props => {
 			</div>
 			<div className="row">
 			{/*<div class="alert alert-danger font-weight-bold my-0" role="alert"><h1>{inflar.msg}</h1></div>*/}
-			<Link className="btn btn-primary btn-lg text-uppercase font-weight-bold text-white text-uppercase my-3" to="/qr" onClick={CleanQS}>Escaneá nuevamente el código QR</Link>
+			<Link className="btn btn-primary btn-lg text-uppercase font-weight-bold text-white text-uppercase my-3 p-3" to="/qr" onClick={CleanQS}>Escaneá nuevamente el código QR</Link>
 			</div>
 		</div>
 	)
