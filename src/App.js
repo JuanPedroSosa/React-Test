@@ -50,6 +50,7 @@ function App() {
 
 	const handleAddUsers = async usuario => {
 		console.log(`add users: ${usuario}`);
+		try {
 		await fetch(urlAPISessions, {
 			method: 'POST', // or 'PUT'
 			body: JSON.stringify({
@@ -60,7 +61,7 @@ function App() {
 			}
 		}).then(res => res.json())
 		.catch(error => {
-			console.error('Error:', error);
+			console.log('Error:', error);
 			setInfo("Usuario o contraseña incorrecta"); // + urlAPISessions
 			setAutorizado(false);
 		} )
@@ -76,10 +77,15 @@ function App() {
 			else {
 				if (response !== undefined && response.message)
 					console.log("err autenticacion:",  response.message);
-				setInfo("Usuario o contraseña incorrecta" + urlAPISessions);
+				setInfo("Usuario o contraseña incorrecta"); //  + urlAPISessions
 				setAutorizado(false);
 			}
 		});
+		}
+		catch (err) {
+			setInfo(err); //  + urlAPISessions
+			setAutorizado(false);
+		}
 	}
 
 	//console.log("QS:" + props.location.search);

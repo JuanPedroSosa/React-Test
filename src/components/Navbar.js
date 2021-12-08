@@ -13,8 +13,9 @@ export const Navbar = props => {
 	console.log("navbar user:", usuario);
 return(
 	<nav className="navbar navbar-expand-lg navbar-light bg-danger">
-		<button className="btn btn-danger text-white m-auto" onClick={() => history.goBack()}>{"<"}</button>
+
   <div className="container-fluid">
+		<button className="btn btn-danger text-white col-sm-1" onClick={() => history.goBack()}>{"<"}</button>
     <a className="navbar-brand text-white">App Midex</a>
 		<ul className="navbar-nav mr-auto mt-2 mt-lg-0">
 			</ul>

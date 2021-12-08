@@ -8,17 +8,17 @@ export const Card = props => (
 	<div className="card text-center bg-light animate__animated animate__fadeInUp">
 	<div className="card-body text-light">
 		<h4 className="card-title text-primary">{props.title}</h4>
-		<p className="card-text text-secondary">
+		<strong className="card-text text-secondary">
 			{props.text
 				? props.text
 				: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Magnam deserunt fuga accusantium excepturi quia, voluptates obcaecati nam in voluptas perferendis velit harum dignissimos quasi ex? Tempore repellat quo doloribus magnam."}
-		</p>
+		</strong>
 		<div className="overflow">
 		<img src={props.imageSource} alt={props.title} className="img-fluid mr-4 rounded-circle" style={{width:90}} />
 		</div>
 		<div className="row m-0">
 		<Link to={"/acciones"} className="btn btn-primary ext-white p-3 my-2">
-		COMPRAR
+		PAGAR
 		</Link>
 		</div>
 		<div className="row m-0">
