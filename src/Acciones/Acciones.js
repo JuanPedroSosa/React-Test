@@ -10,6 +10,7 @@ import { QueryStringContext } from "../queryStringContext";
 import { Ellipsis } from "react-awesome-spinners";
 import logo from "../undraw_done_re_oak4.svg";
 import logoConfirmed from "../undraw_confirmed_re_sef7.svg";
+import logoTiempo from "../tiempo-adelantado.svg";
 //const url = "https://app-telcon-prueba.herokuapp.com";
 const modo = process.env.NODE_ENV || 'development';
 const url =  modo === 'development' ? `${connServer.urlAPI}:${connServer.port}` : `${connServer.urlAPI}`;
@@ -111,6 +112,7 @@ export const Acciones = props => {
 			<div className="row">
 				<strong>{MESSAGE_SERVICE}</strong>
 			</div>
+			<img src={logoTiempo} className="m-2" style={{"width": 100, "height": 100}} alt="tiempo"/>
 			<h1 style={{"font-size": "100px"}}>{zeroPad(minutes)}:{zeroPad(seconds)}</h1>
 			</div>
 			</>); //<div className="row"><h1 style={{"font-size": "100px"}}>{zeroPad(minutes)}:{zeroPad(seconds)}</h1></div>;

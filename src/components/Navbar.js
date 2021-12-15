@@ -1,5 +1,5 @@
 import React, {useContext} from "react";
-import { Redirect, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import ContextoUsuario from "../registeredUser";
 //import "./card.css";

@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import "../Login/login.css";
-import APIServerContext, {connServer} from "../settings";
+import { connServer } from "../settings";
 const modo = process.env.NODE_ENV || 'development';
 const url =  modo === 'development' ? `${connServer.urlAPI}:${connServer.port}` : `${connServer.urlAPI}`;
 const urlAPIRestablecerClave = `${url}/api/restablecerClave/`;
