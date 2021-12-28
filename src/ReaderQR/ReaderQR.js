@@ -7,6 +7,7 @@ import { Navbar } from "../components/Navbar";
 import { QueryStringContext } from "../queryStringContext";
 import { connServer } from "../settings";
 import CryptoJS from "crypto-js";
+import { Redirect } from "react-router-dom";
 // import "./qr.css";
 const MESSAGE_DEFAULT = "no hay resultados";
 const MESSAGE_QR = "Escaneá código QR";
@@ -21,6 +22,11 @@ class QrContainer extends Component {
 		this.handleScan = this.handleScan.bind(this);
 		//this.handleGoBack = this.handleGoBack.bind(this);
 		//const {history} = this.props;
+	}
+
+	componentDidMount() {
+    this.setState({result: MESSAGE_DEFAULT
+		});
 	}
 
 	handleScan(result) {
@@ -38,10 +44,17 @@ class QrContainer extends Component {
 				this.context.setQueryStringQR("");
 			}
 			else {
-				const qsDecode = CryptoJS.AES.decrypt(query[1], connServer.queryKey);
-				const originalText = qsDecode.toString(CryptoJS.enc.Utf8);
-				this.context.setQueryStringQR(originalText);
-				console.log("ReaderQR qs: " + this.context.queryStringQR);
+				try {
+					const qsDecode = CryptoJS.AES.decrypt(query[1], connServer.queryKey);
+					const originalText = qsDecode.toString(CryptoJS.enc.Utf8);
+					this.context.setQueryStringQR(originalText);
+					console.log("ReaderQR qs: " + this.context.queryStringQR);
+				}
+				catch (err) {
+					console.log("ReaderQR err" + err);
+					this.context.setQueryStringQR("");
+				}
+
 			}
 		}
 		//this.setState((result != null) ? result.text : "");
@@ -80,6 +93,7 @@ class QrContainer extends Component {
 		// className="qr-image-wrapper"
 		// div -> style={camStyle}
 		// qrread -> style={previweStyle}
+		console.log("estoy en QR " + this.state.result)
 	return (
 		<React.Fragment>
 			{this.state.result === MESSAGE_DEFAULT &&
@@ -102,7 +116,8 @@ class QrContainer extends Component {
 					</p>
 				</div>
 			}
-			{ this.state.result !== MESSAGE_DEFAULT && <Acciones qr={this.state.result} />}
+			{ this.state.result !== MESSAGE_DEFAULT && <Redirect push to="/acciones"/>}
+			{/*<Acciones qr={this.state.result} />*/}
 			{/* this.state.result !== MESSAGE_DEFAULT && <Acciones qr={this.state.result}/>*/}
 		</React.Fragment>)
 	}

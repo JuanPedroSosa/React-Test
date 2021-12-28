@@ -8,6 +8,8 @@ import { Navbar } from "../components/Navbar";
 import { HeaderSecondary } from "../components/HeaderSecondary";
 import { QueryStringContext } from "../queryStringContext";
 import { Ellipsis } from "react-awesome-spinners";
+import { useHistory } from 'react-router'
+
 import logo from "../undraw_done_re_oak4.svg";
 import logoConfirmed from "../undraw_confirmed_re_sef7.svg";
 import logoTiempo from "../tiempo-adelantado.svg";
@@ -34,6 +36,9 @@ export const Acciones = props => {
 		estado: STS_1,
 		msg: "Listo para inflar"
 	});
+	const history = useHistory();
+	history.push("/acciones")
+	//window.location.assign("/acciones");
 	const usuario = useContext(ContextoUsuario);
 	console.log("u: ", usuario);
 	const { queryStringQR, setQueryStringQR } = useContext(QueryStringContext);
@@ -77,6 +82,7 @@ export const Acciones = props => {
 	}
 
 	const CleanQS = () => {
+		console.log("CleanQS");
 		setQueryStringQR("");
 	}
 
@@ -94,28 +100,29 @@ export const Acciones = props => {
 	const renderer = ({ hours, minutes, seconds, completed }) => {
 	  if (completed) {
 	    // Render a completed state
-	    return (<>
+	    return (
+				<>
 				<div className="container d-block justify-content-center align-items-center h-100">
-				{/*<div class="alert alert-danger font-weight-bold my-0" role="alert"><h1>{MESSAGE_FINISHED}</h1></div>*/}
 				<div className="row">
 				<strong>{MESSAGE_FINISHED}</strong>
 				</div>
 				<Completionist />
 				</div>
-			</>); //<div className="row"><Completionist /></div>;
-
+				</>
+			);
 	  } else {
 	    // Render a countdown
-	    return (<>
-			<div className="container d-block justify-content-center align-items-center h-100">
-			{/*<div class="alert alert-danger font-weight-bold my-0" role="alert"><h1>{MESSAGE_SERVICE}</h1></div>*/}
-			<div className="row">
-				<strong>{MESSAGE_SERVICE}</strong>
-			</div>
-			<img src={logoTiempo} className="m-2" style={{"width": 100, "height": 100}} alt="tiempo"/>
-			<h1 style={{"font-size": "100px"}}>{zeroPad(minutes)}:{zeroPad(seconds)}</h1>
-			</div>
-			</>); //<div className="row"><h1 style={{"font-size": "100px"}}>{zeroPad(minutes)}:{zeroPad(seconds)}</h1></div>;
+	    return (
+				<>
+				<div className="container d-block justify-content-center align-items-center h-100">
+				<div className="row">
+					<strong>{MESSAGE_SERVICE}</strong>
+				</div>
+				<img src={logoTiempo} className="m-2" style={{"width": 100, "height": 100}} alt="tiempo"/>
+				<h1 style={{"font-size": "100px"}}>{zeroPad(minutes)}:{zeroPad(seconds)}</h1>
+				</div>
+				</>
+			);
 	  }
 	};
 
@@ -155,10 +162,18 @@ export const Acciones = props => {
 				return true;
 			}
 			else {
-				if (response.message) {
+				if (response && response.status === "error") {
+					if (response.message.toLowerCase() === "jwt expired") {
+						alert("Ha exirado la sesión. Inicie sesión nuevamente");
+						history.push("/logout");
+						window.location.assign('/logout');
+						return false;
+					}
+				}
+				else if (response.message) {
 					console.log(response.message);
 					infoMsg = `Error al procesar los datos\nDetalle: ${response.message}`;
-				 }
+				}
 
 				return false;
 			}
@@ -185,7 +200,6 @@ export const Acciones = props => {
 	<HeaderSecondary/>
 	{ inflar.estado === STS_1 && (
 		<>
-
 		<div className="container d-block justify-content-center align-items-center h-100">
 			<img src={logoConfirmed} className="m-2" style={{"width": 100, "height": 100}} alt="confirmado"/>
 			<div className="row">
@@ -196,7 +210,7 @@ export const Acciones = props => {
 			<button className="btn btn-primary btn-lg text-uppercase font-weight-bold text-white text-uppercase my-3 p-3" disabled={disable} onClick={handleComenzar}>Inflar</button>
 			</div>
 			{ isLoading && <Ellipsis size={60} color={"#ff4d4d"}/> }
-		</div>
+			</div>
 		</>
 		)
 	}
@@ -207,7 +221,7 @@ export const Acciones = props => {
 			</div>
 			<div className="row">
 			{/*<div class="alert alert-danger font-weight-bold my-0" role="alert"><h1>{inflar.msg}</h1></div>*/}
-			<Link className="btn btn-primary btn-lg text-uppercase font-weight-bold text-white text-uppercase my-3 p-3" to="/qr" onClick={CleanQS}>Escaneá nuevamente el código QR</Link>
+			<Link to="/qr" className="btn btn-primary btn-lg text-uppercase font-weight-bold text-white text-uppercase my-3 p-3" onClick={CleanQS}>Escaneá nuevamente el código QR</Link>
 			</div>
 		</div>
 	)

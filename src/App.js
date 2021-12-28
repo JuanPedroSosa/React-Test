@@ -16,9 +16,10 @@ import PageError from './PageError/PageError';
 import APIServerContext, { connServer } from "./settings";
 import { ProviderUsuario } from "./registeredUser";
 import { Logout } from "./Logout/Logout";
-
 // import { ProviderQueryStringQR } from "./queryStringQR";
 import { QueryStringContext } from "./queryStringContext";
+import { useCookies, CookiesProvider } from "react-cookie";
+
 const modo = process.env.NODE_ENV || 'development';
 const url =  modo === 'development' ? `${connServer.urlAPI}:${connServer.port}` : `${connServer.urlAPI}`;
 const urlAPISessions = `${url}/api/sessions/client`;
@@ -30,6 +31,8 @@ function App() {
 	const [info, setInfo] = useState("");
 	const [autorizado, setAutorizado] = useState(false);
 	const [queryStringQR, setQueryStringQR] = useState("");
+	const [cookies, setCookie] = useCookies(["username", "password"]);
+
 	const qsValue = useMemo(
     () => ({ queryStringQR, setQueryStringQR }),
     [queryStringQR]
@@ -73,6 +76,11 @@ function App() {
 				setToken(response.jwt);
 				setInfo("");
 				setAutorizado(true);
+				console.log("usuario recordar?:",usuario.remember);
+				if (usuario.remember) {
+					setCookie("username", usuario.username, {"path": "/"});
+					setCookie("password", usuario.password, {"path": "/"});
+				}
 			}
 			else {
 				if (response !== undefined && response.message)
@@ -89,6 +97,7 @@ function App() {
 	}
 
 	//console.log("QS:" + props.location.search);
+	console.log("cookies: ", cookies.username, " ", cookies.password);
 	console.log("verifico: " + token);
   //if (!autorizado/*!token*/) {
   //  return <LoginForm onAddUsers={handleAddUsers} msg={info}/>
@@ -100,6 +109,7 @@ function App() {
 		<APIServerContext.Provider value={connServer} token={token}>
 		<ProviderUsuario value={state}>
 		<QueryStringContext.Provider value={qsValue}>
+		<CookiesProvider>
 		{/*<ProviderQueryStringQR value={queryStringQR}>*/}
 		<BrowserRouter>
     	<div className="App">
@@ -117,7 +127,7 @@ function App() {
 					path="/"
 					exact
 				>
-			{!autorizado ? <LoginForm onAddUsers={handleAddUsers} msg={info}/> : <Redirect push to="/app-midex"/>}
+			{!autorizado ? <LoginForm onAddUsers={handleAddUsers} msg={info} cookies={cookies}/> : <Redirect push to="/app-midex"/>}
 			</Route>
 				<Route
 					path="/app-midex"
@@ -142,13 +152,17 @@ function App() {
 					{autorizado && <Thermos/>}
 				</Route>
 				<Route
+					exact
 					path="/qr"
 				>
 					{autorizado && <QrContainer/>}
 				</Route>
 				<Route
+					exact
       	  path="/acciones"
-				component={Acciones} />
+				>
+				{autorizado && <Acciones/>}
+				</Route>
 				{/*<Route
 				path="/"
 				render={(props) => (
@@ -172,7 +186,7 @@ function App() {
 
 			</div>
 		</BrowserRouter>
-		{/*</ProviderQueryStringQR>*/}
+		</CookiesProvider>
 		</QueryStringContext.Provider>
 		</ProviderUsuario>
 		</APIServerContext.Provider>

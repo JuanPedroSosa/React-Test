@@ -6,16 +6,26 @@ import ResetPasswordForm from "../ResetPassword/ResetPasswordForm";
 import RegisterForm from "../Register/RegisterForm";
 import { connServer } from "../settings";
 import { QueryStringContext } from "../queryStringContext";
+import { instanceOf } from 'prop-types';
+import { withCookies, Cookies } from "react-cookie";
+import { Ellipsis } from "react-awesome-spinners";
 
 class LoginForm extends Component {
 	static contextType = QueryStringContext;
+	/*static propTypes = {
+    cookies: instanceOf(Cookies).isRequired
+  };*/
 	constructor(props) {
 		super(props);
+		const { cookies } = props;
+		console.log("login cookies: ", cookies);
 		this.state = {
-			username: '',
-			password: '',
+			username: cookies.username || "", // cookies.get("username")
+			password: cookies.password || "", // cookies.get("password")
 			forgot: false,
 			register: false,
+			remember: false,
+			isLoading: false
 		}
 		// React pierde el scope this, entonces con bind le decimos a la
 		// clase que pertenece
@@ -24,8 +34,8 @@ class LoginForm extends Component {
 		this.handleOlvidasteClave = this.handleOlvidasteClave.bind(this);
 		this.handleRegistrarse = this.handleRegistrarse.bind(this);
 		this.handleLogin = this.handleLogin.bind(this);
+		this.handleRemember = this.handleRemember.bind(this);
 		this.msg = this.props.msg;
-
 	}
 
 	componentDidMount() {
@@ -65,7 +75,17 @@ class LoginForm extends Component {
 		this.setState({register: false, forgot: false})
 	}
 
+	handleRemember(e) {
+		const target = e.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    // const name = target.name;
+    this.setState({
+			"remember": value
+		});
+	}
+
 	async handleSubmit(e) {
+		this.setState({isLoading: true});
 		// evita que se refresque la pantalla
 		e.preventDefault();
 
@@ -73,7 +93,7 @@ class LoginForm extends Component {
 		//this.setState({username:'hola'})
 		console.log(`login submit: ${this.state.username}`);
 		this.props.onAddUsers(this.state);
-
+		this.setState({isLoading: false});
 		// const token = await loginUser({
     //   username: this.state.username,
     //   password: this.state.password
@@ -85,6 +105,7 @@ class LoginForm extends Component {
 	}
 
 	render() {
+
 		return (
 			<>
 			{this.state.register && <RegisterForm onLogin={this.handleLogin} />}
@@ -110,6 +131,7 @@ class LoginForm extends Component {
 												className="form-control"
 												placeholder="correo / número de celular"
 												type="text" id="inputEmail"
+												value={this.state.username}
 												required></input>
 			                  <label for={"inputEmail"}>Ingrese correo o número celular</label>
 			                </div>
@@ -122,16 +144,20 @@ class LoginForm extends Component {
 												className="form-control"
 												placeholder="clave"
 												id="inputPassword"
+												value={this.state.password}
 												required>
 												</input>
 			                  <label for={"inputPassword"}>Ingrese la contraseña</label>
 			                </div>
 
-			                {/*<div className="custom-control custom-checkbox mb-3">
-			                  <input type={"checkbox"} className="custom-control-input" id="customCheck1"></input>
-			                  <label className="custom-control-label" >Remember password</label>
-											</div>*/}
-			                <button className="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2 w-100" type="submit">Ingresar</button>
+			                <div className="custom-control custom-checkbox mb-3">
+			                  <input type={"checkbox"} className="custom-control-input" id="customCheck1" checked={this.state.remember} onChange={this.handleRemember}></input>
+			                  <label className="custom-control-label" >Recordar</label>
+											</div>
+											<div>
+											{ this.state.isLoading && <Ellipsis size={60} color={"#ff4d4d"}/> }
+											</div>
+			                { !this.state.isLoading && <button className="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2 w-100" type="submit">Ingresar</button>}
 			                <div className="text-center">
 											{/*<Link to={"/restablecerClave"} className="small">¿Olvidaste tu contraseña?</Link>*/}
 			                  <a className="small" onClick={this.handleOlvidasteClave} href="javascript:void(0)">¿Olvidaste tu contraseña?</a>
@@ -179,4 +205,4 @@ class LoginForm extends Component {
 			</div>
 
 */
-export default LoginForm;
+export default LoginForm; //withCookies(LoginForm);

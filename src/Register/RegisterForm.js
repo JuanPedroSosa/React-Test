@@ -100,6 +100,7 @@ class RegisterForm extends Component {
 	async handleSubmit(e) {
 		// evita que se refresque la pantalla
 		e.preventDefault();
+
 		//this.setState({username:'hola'})
 		//console.log(`reset password submit: ${this.state.correo}, ${this.state.nombre}, ${this.state.apellido}, ${this.state.celular}`);
 		let validated = true;
