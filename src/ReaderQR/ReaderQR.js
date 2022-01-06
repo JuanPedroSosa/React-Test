@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 // import { useHistory } from "react-router-dom";
 import QrReader from "modern-react-qr-reader";
-import { Acciones } from "../Acciones/Acciones";
+//import { Acciones } from "../Acciones/Acciones";
 import { HeaderSecondary } from "../components/HeaderSecondary";
 import { Navbar } from "../components/Navbar";
 import { QueryStringContext } from "../queryStringContext";

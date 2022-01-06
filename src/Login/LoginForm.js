@@ -6,8 +6,8 @@ import ResetPasswordForm from "../ResetPassword/ResetPasswordForm";
 import RegisterForm from "../Register/RegisterForm";
 import { connServer } from "../settings";
 import { QueryStringContext } from "../queryStringContext";
-import { instanceOf } from 'prop-types';
-import { withCookies, Cookies } from "react-cookie";
+//import { instanceOf } from 'prop-types';
+//import { withCookies, Cookies } from "react-cookie";
 import { Ellipsis } from "react-awesome-spinners";
 
 class LoginForm extends Component {
@@ -133,7 +133,7 @@ class LoginForm extends Component {
 												type="text" id="inputEmail"
 												value={this.state.username}
 												required></input>
-			                  <label for={"inputEmail"}>Ingrese correo o número celular</label>
+			                  <label htmlFor={"inputEmail"}>Ingrese correo o número celular</label>
 			                </div>
 
 			                <div className="form-label-group">
@@ -147,7 +147,7 @@ class LoginForm extends Component {
 												value={this.state.password}
 												required>
 												</input>
-			                  <label for={"inputPassword"}>Ingrese la contraseña</label>
+			                  <label htmlFor={"inputPassword"}>Ingrese la contraseña</label>
 			                </div>
 
 			                <div className="custom-control custom-checkbox mb-3">

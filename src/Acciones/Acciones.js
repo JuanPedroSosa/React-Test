@@ -2,7 +2,8 @@ import React, { useState, useContext } from "react";
 import Countdown, { zeroPad } from 'react-countdown';
 import { Link } from "react-router-dom";
 import { connServer } from "../settings";
-import ContextoUsuario from "../registeredUser";
+//import ContextoUsuario from "../registeredUser";
+import { useWebsocket } from "../registeredUser2";
 // import CryptoJS from "crypto-js";
 import { Navbar } from "../components/Navbar";
 import { HeaderSecondary } from "../components/HeaderSecondary";
@@ -39,8 +40,10 @@ export const Acciones = props => {
 	const history = useHistory();
 	history.push("/acciones")
 	//window.location.assign("/acciones");
-	const usuario = useContext(ContextoUsuario);
-	console.log("u: ", usuario);
+	//const usuario = useContext(ContextoUsuario);
+	const { data } = useWebsocket();
+	//console.log("u: ", usuario);
+	console.log("u: ", data);
 	const { queryStringQR, setQueryStringQR } = useContext(QueryStringContext);
 	const [disable, setDisable] = useState(false);
 	/*const query = qr.split("?");
@@ -126,13 +129,14 @@ export const Acciones = props => {
 	  }
 	};
 
-	console.log("Acciones codigo: ", codigoEmpresa, " celular: ", usuario.response.client.celular, " equipo: ", idEquipo, " posicion:", posicion);
+	console.log("Acciones codigo: ", codigoEmpresa, " celular: ", data.client.celular/* usuario.response.client.celular*/, " equipo: ", idEquipo, " posicion:", posicion);
+
 	const handleComenzar = async event => {
 		event.preventDefault();
 		setDisable(true);
-		const data = {
+		const regData = {
 			codigoEstacion: codigoEmpresa,
-			nroCelular: usuario.response.client.celular,
+			nroCelular: data.client.celular, //usuario.response.client.celular,
 			idEquipo: idEquipo,
 			posicion: posicion,
 			version: version
@@ -142,10 +146,11 @@ export const Acciones = props => {
 		setIsLoading(true);
 		const res = await fetch(urlAPIPrepago, {
 			method: 'POST', // or 'PUT'
-			body: JSON.stringify(data), // data can be `string` or {object}!
+			body: JSON.stringify(regData), // data can be `string` or {object}!
 			headers:{
 				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${usuario.response.jwt}`
+				'Authorization': `Bearer ${data.jwt}`
+				//'Authorization': `Bearer ${usuario.response.jwt}`
 			}
 		}).then(res => res.json())
 		.catch(error => {
@@ -195,43 +200,41 @@ export const Acciones = props => {
 		}
 	}
 	return (
-	<>
-	<Navbar/>
-	<HeaderSecondary/>
-	{ inflar.estado === STS_1 && (
 		<>
-		<div className="container d-block justify-content-center align-items-center h-100">
-			<img src={logoConfirmed} className="m-2" style={{"width": 100, "height": 100}} alt="confirmado"/>
+		<Navbar/>
+		<HeaderSecondary/>
+		{ inflar.estado === STS_1 && (
+			<>
+			<div className="container d-block justify-content-center align-items-center h-100">
+				<img src={logoConfirmed} className="m-2" style={{"width": 100, "height": 100}} alt="confirmado"/>
+				<div className="row">
+				<strong>{MESSAGE_START}</strong>
+				</div>
+				<div className="row">
+				<button className="btn btn-primary btn-lg text-uppercase font-weight-bold text-white text-uppercase my-3 p-3" disabled={disable} onClick={handleComenzar}>Inflar</button>
+				</div>
+				{ isLoading && <Ellipsis size={60} color={"#ff4d4d"}/> }
+				</div>
+			</>
+			)
+		}
+		{ inflar.estado === STS_2 && (
+			<div className="container d-block justify-content-center align-items-center h-100">
+				<div className="row">
+					<strong>{inflar.msg}</strong>
+				</div>
+				<div className="row">
+				<Link to="/qr" className="btn btn-primary btn-lg text-uppercase font-weight-bold text-white text-uppercase my-3 p-3" onClick={CleanQS}>Escaneá nuevamente el código QR</Link>
+				</div>
+			</div>
+		)
+		}
+		{ inflar.estado === STS_3 && (
 			<div className="row">
-			<strong>{MESSAGE_START}</strong>
+			<Countdown date={Date.now() + MAX_TIME} renderer={renderer}/>
 			</div>
-			<div className="row">
-			{/*<div class="alert alert-danger font-weight-bold my-0" role="alert"><h1>{MESSAGE_START}</h1></div>*/}
-			<button className="btn btn-primary btn-lg text-uppercase font-weight-bold text-white text-uppercase my-3 p-3" disabled={disable} onClick={handleComenzar}>Inflar</button>
-			</div>
-			{ isLoading && <Ellipsis size={60} color={"#ff4d4d"}/> }
-			</div>
+			)
+		}
 		</>
-		)
-	}
-	{ inflar.estado === STS_2 && (
-		<div className="container d-block justify-content-center align-items-center h-100">
-			<div className="row">
-				<strong>{inflar.msg}</strong>
-			</div>
-			<div className="row">
-			{/*<div class="alert alert-danger font-weight-bold my-0" role="alert"><h1>{inflar.msg}</h1></div>*/}
-			<Link to="/qr" className="btn btn-primary btn-lg text-uppercase font-weight-bold text-white text-uppercase my-3 p-3" onClick={CleanQS}>Escaneá nuevamente el código QR</Link>
-			</div>
-		</div>
-	)
-	}
-	{ inflar.estado === STS_3 && (
-		<div className="row">
-		<Countdown date={Date.now() + MAX_TIME} renderer={renderer}/>
-		</div>
-		)
-	}
-	</>
 	);
 }

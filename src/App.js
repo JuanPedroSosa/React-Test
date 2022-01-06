@@ -14,11 +14,13 @@ import QrContainer from "./ReaderQR/ReaderQR";
 import { Acciones } from "./Acciones/Acciones";
 import PageError from './PageError/PageError';
 import APIServerContext, { connServer } from "./settings";
-import { ProviderUsuario } from "./registeredUser";
+//import { ProviderUsuario } from "./registeredUser";
+import { ContextUser } from "./registeredUser2";
 import { Logout } from "./Logout/Logout";
 // import { ProviderQueryStringQR } from "./queryStringQR";
 import { QueryStringContext } from "./queryStringContext";
 import { useCookies, CookiesProvider } from "react-cookie";
+import InitWS from "./services/WebSockets";
 
 const modo = process.env.NODE_ENV || 'development';
 const url =  modo === 'development' ? `${connServer.urlAPI}:${connServer.port}` : `${connServer.urlAPI}`;
@@ -28,6 +30,7 @@ console.log("Modo: ", process.env.NODE_ENV, "1. URL:", urlAPISessions);
 function App() {
 	const [token, setToken] = useState("");
 	const [state, setState] = useState({});
+	const [data, setData] = useState({});
 	const [info, setInfo] = useState("");
 	const [autorizado, setAutorizado] = useState(false);
 	const [queryStringQR, setQueryStringQR] = useState("");
@@ -36,7 +39,18 @@ function App() {
 	const qsValue = useMemo(
     () => ({ queryStringQR, setQueryStringQR }),
     [queryStringQR]
+	);
+
+	/**
+	 * Datos del usuario/cliente que inició la sesión
+	 */
+	const user = useMemo(
+    () => ({ data, setData }),
+    [data]
   );
+
+	// websocket
+	//InitWS();
 	//const { token, setToken } = useToken();
 // ver validar celular token
 	/*useEffect(() => {
@@ -51,13 +65,21 @@ function App() {
 		else setQueryStringQR("");
 	},[queryStringQR]);*/
 
+	/**
+	 * HandleAddUsers recibe los datos del usuario/cliente que inicia la sesión
+	 * Luego se realiza un solicitud POST con el nro celular o correo
+	 * Si la autenticación es correcta el servidor responde con los datos del cliente
+	 * mas el token que será utilizado para realizar cualquier operación contra
+	 * el servidor
+	 * @param {*} usuario
+	 */
 	const handleAddUsers = async usuario => {
-		console.log(`add users: ${usuario}`);
+		console.log(`sesion iniciada por users: ${usuario}`);
 		try {
 		await fetch(urlAPISessions, {
 			method: 'POST', // or 'PUT'
 			body: JSON.stringify({
-				"celular": usuario.username,
+				"celular": usuario.username, // puede ir el correo o el celular
 				}), // data can be `string` or {object}!
 			headers:{
 				'Content-Type': 'application/json'
@@ -73,6 +95,8 @@ function App() {
 			if (response !== undefined && response.status !== "error") {
 				console.log("usuario ingresado:", response);
 				setState({...state, response});
+				//setData(response.client);
+				setData({client: response.client, jwt: response.jwt});
 				setToken(response.jwt);
 				setInfo("");
 				setAutorizado(true);
@@ -81,6 +105,7 @@ function App() {
 					setCookie("username", usuario.username, {"path": "/"});
 					setCookie("password", usuario.password, {"path": "/"});
 				}
+
 			}
 			else {
 				if (response !== undefined && response.message)
@@ -104,16 +129,18 @@ function App() {
 	//}
 	console.log("listo: " + token);
 	console.log("state: ", state);
-
+	console.log("data: ", data);
+// <ContextUser.Provider value={{data, setData}}>
   return (
 		<APIServerContext.Provider value={connServer} token={token}>
-		<ProviderUsuario value={state}>
+		{/*<ProviderUsuario value={state}>*/}
+		<ContextUser.Provider value={user}>
 		<QueryStringContext.Provider value={qsValue}>
 		<CookiesProvider>
+		<InitWS/>
 		{/*<ProviderQueryStringQR value={queryStringQR}>*/}
 		<BrowserRouter>
     	<div className="App">
-			{/*<Navbar userName={username} keys={"1"}/>*/}
 			{/*<Redirect
       	from="/"
 			to="/app-midex" />*/}
@@ -188,7 +215,8 @@ function App() {
 		</BrowserRouter>
 		</CookiesProvider>
 		</QueryStringContext.Provider>
-		</ProviderUsuario>
+		</ContextUser.Provider>
+		{/*</ProviderUsuario>*/}
 		</APIServerContext.Provider>
   );
 }
