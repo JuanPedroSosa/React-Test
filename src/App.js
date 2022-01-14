@@ -19,22 +19,23 @@ import { ContextUser } from "./registeredUser2";
 import { Logout } from "./Logout/Logout";
 // import { ProviderQueryStringQR } from "./queryStringQR";
 import { QueryStringContext } from "./queryStringContext";
-import { useCookies, CookiesProvider } from "react-cookie";
+import { CookiesProvider } from "react-cookie";
 import InitWS from "./services/WebSockets";
+//import { requestLogin } from "./api/serverQuery";
 
-const modo = process.env.NODE_ENV || 'development';
-const url =  modo === 'development' ? `${connServer.urlAPI}:${connServer.port}` : `${connServer.urlAPI}`;
-const urlAPISessions = `${url}/api/sessions/client`;
-console.log("Modo: ", process.env.NODE_ENV, "1. URL:", urlAPISessions);
+//const modo = process.env.NODE_ENV || 'development';
+//const url =  modo === 'development' ? `${connServer.urlAPI}:${connServer.port}` : `${connServer.urlAPI}`;
+//const urlAPISessions = `${url}/api/sessions/client`;
+//console.log("Modo: ", process.env.NODE_ENV, "1. URL:", urlAPISessions);
 
 function App() {
-	const [token, setToken] = useState("");
-	const [state, setState] = useState({});
+	//const [token, setToken] = useState("");
+	//const [state, setState] = useState({});
 	const [data, setData] = useState({});
-	const [info, setInfo] = useState("");
+	//const [info, setInfo] = useState("");
 	const [autorizado, setAutorizado] = useState(false);
 	const [queryStringQR, setQueryStringQR] = useState("");
-	const [cookies, setCookie] = useCookies(["username", "password"]);
+	//const [cookies, setCookie] = useCookies(["username", "password"]);
 
 	const qsValue = useMemo(
     () => ({ queryStringQR, setQueryStringQR }),
@@ -66,38 +67,25 @@ function App() {
 	},[queryStringQR]);*/
 
 	/**
-	 * HandleAddUsers recibe los datos del usuario/cliente que inicia la sesión
+	 * handleLogin recibe los datos del usuario/cliente que inicia la sesión
 	 * Luego se realiza un solicitud POST con el nro celular o correo
 	 * Si la autenticación es correcta el servidor responde con los datos del cliente
 	 * mas el token que será utilizado para realizar cualquier operación contra
 	 * el servidor
 	 * @param {*} usuario
 	 */
-	const handleAddUsers = async usuario => {
+	const handleLogin = async usuario => {
 		console.log(`sesion iniciada por users: ${usuario}`);
+/*
 		try {
-		await fetch(urlAPISessions, {
-			method: 'POST', // or 'PUT'
-			body: JSON.stringify({
-				"celular": usuario.username, // puede ir el correo o el celular
-				}), // data can be `string` or {object}!
-			headers:{
-				'Content-Type': 'application/json'
-			}
-		}).then(res => res.json())
-		.catch(error => {
-			console.log('Error:', error);
-			setInfo("Usuario o contraseña incorrecta"); // + urlAPISessions
-			setAutorizado(false);
-		} )
-		.then(response => {
-			console.log('Response session Success:', response);
-			if (response !== undefined && response.status !== "error") {
-				console.log("usuario ingresado:", response);
-				setState({...state, response});
+			const req = await requestLogin(usuario.username);
+			console.log("requestLogin: ", req);
+			if (req !== undefined && req.status !== "error") {
+				console.log("usuario ingresado:", req);
+				setState({...state, req});
 				//setData(response.client);
-				setData({client: response.client, jwt: response.jwt});
-				setToken(response.jwt);
+				setData({client: req.client, jwt: req.jwt});
+				//setToken(req.jwt);
 				setInfo("");
 				setAutorizado(true);
 				console.log("usuario recordar?:",usuario.remember);
@@ -108,31 +96,35 @@ function App() {
 
 			}
 			else {
-				if (response !== undefined && response.message)
-					console.log("err autenticacion:",  response.message);
+				if (req !== undefined && req.message)
+					console.log("err autenticacion:",  req.message);
 				setInfo("Usuario o contraseña incorrecta"); //  + urlAPISessions
 				setAutorizado(false);
 			}
-		});
 		}
 		catch (err) {
-			setInfo(err); //  + urlAPISessions
+			// error de fetch devuelve un object y lo paso el string para mostrarlo en un alert
+			let error = err.toString();
+			if (error.toLowerCase().search("networkerror") !== -1)
+				error = "Sin conexión";
+
+			setInfo(error);
 			setAutorizado(false);
 		}
+		*/
 	}
 
-	//console.log("QS:" + props.location.search);
-	console.log("cookies: ", cookies.username, " ", cookies.password);
-	console.log("verifico: " + token);
-  //if (!autorizado/*!token*/) {
-  //  return <LoginForm onAddUsers={handleAddUsers} msg={info}/>
-	//}
-	console.log("listo: " + token);
-	console.log("state: ", state);
+
+	//console.log("cookies: ", cookies.username, " ", cookies.password);
+	//console.log("state: ", state);
 	console.log("data: ", data);
+	console.log("autorizado: ", autorizado);
+	console.log("1.qr leido: ", qsValue);
+	console.log("2.qr leido: ", queryStringQR);
 // <ContextUser.Provider value={{data, setData}}>
+//token={token}
   return (
-		<APIServerContext.Provider value={connServer} token={token}>
+		<APIServerContext.Provider value={connServer} >
 		{/*<ProviderUsuario value={state}>*/}
 		<ContextUser.Provider value={user}>
 		<QueryStringContext.Provider value={qsValue}>
@@ -144,7 +136,7 @@ function App() {
 			{/*<Redirect
       	from="/"
 			to="/app-midex" />*/}
-			{/*!autorizado && <LoginForm onAddUsers={handleAddUsers} msg={info}/>*/}
+			{/*!autorizado && <LoginForm onAddUsers={handleLogin} msg={info}/>*/}
 
 			{/*<Redirect
 			from="/"
@@ -154,7 +146,8 @@ function App() {
 					path="/"
 					exact
 				>
-			{!autorizado ? <LoginForm onAddUsers={handleAddUsers} msg={info} cookies={cookies}/> : <Redirect push to="/app-midex"/>}
+			{/*!autorizado ? <LoginForm onUserLogin={handleLogin} msg={info} cookies={cookies}/> : <Redirect push to="/app-midex"/>*/}
+			{!autorizado ? <LoginForm setQueryStringQR={setQueryStringQR} setData={setData} setAutorizado={setAutorizado} /> : <Redirect push to="/app-midex"/>}
 			</Route>
 				<Route
 					path="/app-midex"
@@ -165,7 +158,7 @@ function App() {
 				{/*<Route
 					path="/"
 					exact>
-	 				{!autorizado && <LoginForm onAddUsers={handleAddUsers} msg={info}/>}
+	 				{!autorizado && <LoginForm onAddUsers={handleLogin} msg={info}/>}
 				</Route>*/}
 				<Route
 					exact
@@ -193,7 +186,7 @@ function App() {
 				{/*<Route
 				path="/"
 				render={(props) => (
-					<LoginForm {...props} onAddUsers={handleAddUsers} msg={info}/>
+					<LoginForm {...props} onAddUsers={handleLogin} msg={info}/>
 				)} />*/}
 				<Route
       	  path="/forgot"

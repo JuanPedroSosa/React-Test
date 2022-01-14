@@ -45,16 +45,15 @@ class QrContainer extends Component {
 			}
 			else {
 				try {
+					console.log("ReaderQR query: " + query[1]);
 					const qsDecode = CryptoJS.AES.decrypt(query[1], connServer.queryKey);
 					const originalText = qsDecode.toString(CryptoJS.enc.Utf8);
 					this.context.setQueryStringQR(originalText);
-					console.log("ReaderQR qs: " + this.context.queryStringQR);
 				}
 				catch (err) {
 					console.log("ReaderQR err" + err);
 					this.context.setQueryStringQR("");
 				}
-
 			}
 		}
 		//this.setState((result != null) ? result.text : "");

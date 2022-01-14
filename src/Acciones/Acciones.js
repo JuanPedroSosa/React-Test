@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import Countdown, { zeroPad } from 'react-countdown';
 import { Link } from "react-router-dom";
-import { connServer } from "../settings";
+//import { connServer } from "../settings";
 //import ContextoUsuario from "../registeredUser";
 import { useWebsocket } from "../registeredUser2";
 // import CryptoJS from "crypto-js";
@@ -14,31 +14,41 @@ import { useHistory } from 'react-router'
 import logo from "../undraw_done_re_oak4.svg";
 import logoConfirmed from "../undraw_confirmed_re_sef7.svg";
 import logoTiempo from "../tiempo-adelantado.svg";
+//import { requestAuthorization } from "../api/serverQuery";
+import { useMutateAuthoriation } from "../services/apiServices";
 //const url = "https://app-telcon-prueba.herokuapp.com";
-const modo = process.env.NODE_ENV || 'development';
-const url =  modo === 'development' ? `${connServer.urlAPI}:${connServer.port}` : `${connServer.urlAPI}`;
-const urlAPIPrepago = `${url}/api/prepago`;
+//const modo = process.env.NODE_ENV || 'development';
+//const url =  modo === 'development' ? `${connServer.urlAPI}:${connServer.port}` : `${connServer.urlAPI}`;
+//const urlAPIPrepago = `${url}/api/prepago`;
 
 const MESSAGE_SERVICE = "Servicio activado - restan";
 const MESSAGE_START = "Listo ya puede utilizar el servicio";
-const MESSAGE_ERROR = "QR inválido";
+//const MESSAGE_ERROR = "QR inválido";
 const MESSAGE_FINISHED = "Servicio finalizado";
-let MAX_TIME = 30000;
+/*let MAX_TIME = 30000;*/
 
-const STS_1 = 0; // inflar
-const STS_2 = 1; // no inflar
-const STS_3 = 2; // cuenta regresiva en espera a finalización
+/** pedido autorizacion*/
+const STS_1 = 0;
+/** error no autorizado para utilizar el servicior */
+const STS_2 = 1;
+/** autorizado mostrar cuenta regresiva en espera a finalización */
+const STS_3 = 2;
 
 // <URL> + <codigoEmpresa> + <equipo> + <idEquipo> + <zona> + <version>
 export const Acciones = props => {
 	//const { qr } = props;
-	const [isLoading, setIsLoading] = useState(false);
+	//const [isLoading, setIsLoading] = useState(false);
 	const [inflar, setInflar] = useState({
 		estado: STS_1,
-		msg: "Listo para inflar"
+		msg: "Listo para inflar",
+		detail: ""
 	});
+	const [countDown, setCountDown] = useState(0);
 	const history = useHistory();
-	history.push("/acciones")
+	history.push("/acciones");
+	// eslint-disable-next-line react-hooks/rules-of-hooks
+	const {mutate, isLoading} = useMutateAuthoriation();
+
 	//window.location.assign("/acciones");
 	//const usuario = useContext(ContextoUsuario);
 	const { data } = useWebsocket();
@@ -64,7 +74,7 @@ export const Acciones = props => {
 		})
 	}
 
-	console.log('url:', urlAPIPrepago, " - qr: ", queryStringQR/*originalText*/, " arrQR:", arrQR);
+	console.log(" - qr: ", queryStringQR/*originalText*/, " arrQR:", arrQR);
 
 	let codigoEmpresa = 0;
 	let idEquipo = 0;
@@ -80,7 +90,7 @@ export const Acciones = props => {
 			idEquipo = Number(resp[1]);
 		else if (resp[0] === "zona")
 			posicion = resp[1];
-			else if (resp[0] === "version")
+		else if (resp[0] === "version")
 			version = resp[1];
 	}
 
@@ -143,7 +153,108 @@ export const Acciones = props => {
 		}
 
 		let infoMsg = "";
-		setIsLoading(true);
+		console.log("mutate: ", regData, data.jwt);
+		// mutate: por tratarse de una llamada a fetch
+		// no hace falta colocarlo en un try catch, viene en onError cualquier error fetch
+		mutate({regData: regData, jwt: data.jwt}, {
+			onSuccess: (data) => {
+				console.log(`requestAuthorization: Datos del servidor (${data})`);
+				if (data && data.status === "ok") {
+					setCountDown(data.data.tiempo * 1000 * 60); // minutos a ms
+					infoMsg =	data.message;
+					setInflar({
+						estado: STS_3,
+						msg: infoMsg,
+						detail: `Detalle: ${data.message}`
+					});
+				}
+				else {
+					if (data && data.status === "error") {
+						if (data.message.toLowerCase() === "jwt expired") {
+							alert("Ha exirado la sesión. Inicie sesión nuevamente");
+							history.push("/logout");
+							window.location.assign('/logout');
+							return;
+						}
+
+						infoMsg = "Error al procesar los datos";
+
+						setInflar({
+							estado: STS_2,
+							msg: infoMsg,
+							detail: `Detalle: ${data.message}`
+						});
+					}
+					else if (data.message) {
+						console.log(data.message);
+						infoMsg = "Error al procesar los datos";
+
+						setInflar({
+							estado: STS_2,
+							msg: infoMsg,
+							detail: `Detalle: ${data.message}`
+						});
+					}
+				}
+			},
+			onError: (err) => {
+				let error = err.toString();
+
+				if (error.toLowerCase().search("networkerror") !== -1)
+					error = "Sin conexión";
+
+				infoMsg = "Error al procesar los datos";
+				setInflar({
+					estado: STS_2,
+					msg: infoMsg,
+					detail: `Detalle: ${error}`
+				});
+			}
+		});
+		//setIsLoading(true);
+/*
+		try {
+			const req = await requestAuthorization(regData, data.jwt);
+			console.log("requestAuthorization: ", req);
+			if (req && req.status === "ok") {
+				setCountDown(req.data.tiempo * 1000 * 60); // minutos a ms
+				infoMsg =	req.message;
+				setInflar({
+					estado: STS_3,
+					msg: infoMsg,
+					detail: `Detalle: ${req.message}`
+				});
+			}
+			else {
+				if (req && req.status === "error") {
+					if (req.message.toLowerCase() === "jwt expired") {
+						alert("Ha exirado la sesión. Inicie sesión nuevamente");
+						history.push("/logout");
+						window.location.assign('/logout');
+					}
+				}
+				else if (req.message) {
+					console.log(req.message);
+					infoMsg = "Error al procesar los datos";
+
+					setInflar({
+						estado: STS_2,
+						msg: infoMsg,
+						detail: `Detalle: ${req.message}`
+					});
+				}
+			}
+		} catch (error) {
+			console.log(error);
+			infoMsg = "Error al procesar los datos";
+			setInflar({
+				estado: STS_2,
+				msg: infoMsg,
+				detail: `Detalle: ${error}`
+			});
+		}
+		*/
+/*
 		const res = await fetch(urlAPIPrepago, {
 			method: 'POST', // or 'PUT'
 			body: JSON.stringify(regData), // data can be `string` or {object}!
@@ -183,9 +294,9 @@ export const Acciones = props => {
 				return false;
 			}
 		});
-
-		setIsLoading(false);
-
+*/
+		//setIsLoading(false);
+/*
 		if (res) {
 			setInflar({
 				estado: STS_3,
@@ -198,6 +309,7 @@ export const Acciones = props => {
 				msg: infoMsg
 			})
 		}
+	*/
 	}
 	return (
 		<>
@@ -222,6 +334,8 @@ export const Acciones = props => {
 			<div className="container d-block justify-content-center align-items-center h-100">
 				<div className="row">
 					<strong>{inflar.msg}</strong>
+					<br/>
+					<strong>{inflar.detail}</strong>
 				</div>
 				<div className="row">
 				<Link to="/qr" className="btn btn-primary btn-lg text-uppercase font-weight-bold text-white text-uppercase my-3 p-3" onClick={CleanQS}>Escaneá nuevamente el código QR</Link>
@@ -231,7 +345,7 @@ export const Acciones = props => {
 		}
 		{ inflar.estado === STS_3 && (
 			<div className="row">
-			<Countdown date={Date.now() + MAX_TIME} renderer={renderer}/>
+			<Countdown date={Date.now() + countDown/*MAX_TIME*/} renderer={renderer}/>
 			</div>
 			)
 		}

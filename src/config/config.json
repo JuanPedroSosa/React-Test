@@ -1,25 +1,35 @@
 {
 	"development": {
-    "urlAPI": "http://192.168.0.15",
+		"urlAPI": "http://192.168.0.13",
+		"urlWebSocket": "192.168.0.13",
 		"port": 8080,
-		"queryKey": "2020Natasha"
+		"queryKey": "2020Natasha",
+		"retry": 3
   },
   "development2": {
-    "urlAPI": "http://localhost",
-    "port": 8080
+		"urlAPI": "http://localhost",
+		"urlWebSocket": "localhost",
+		"port": 8080,
+		"retry": 3
   },
   "test": {
-    "urlAPI": "http://localhost",
+		"urlAPI": "http://localhost",
+		"urlWebSocket": "localhost",
 		"port": 8080,
-		"queryKey": "2020Natasha"
+		"queryKey": "2020Natasha",
+		"retry": 3
   },
   "production": {
 		"urlAPI": "https://app-telcon-prueba.herokuapp.com",
-		"queryKey": "2020Natasha"
+		"urlWebSocket": "app-telcon-prueba.herokuapp.com",
+		"queryKey": "2020Natasha",
+		"retry": 3
 	},
 	"development3": {
 		"urlAPI": "https://4a70-2800-af0-1098-145-5c45-347f-5b01-aa4a.ngrok.io",
+		"urlWebSocket": "4a70-2800-af0-1098-145-5c45-347f-5b01-aa4a.ngrok.io",
 		"port": 443,
-		"queryKey": "2020Natasha"
+		"queryKey": "2020Natasha",
+		"retry": 3
   }
 }
