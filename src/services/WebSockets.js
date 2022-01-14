@@ -4,10 +4,10 @@ import { connServer } from "../settings";
 import { useWebsocket } from "../registeredUser2";
 import { useRef } from "react";
 const modo = process.env.NODE_ENV || 'development';
-const url =  modo === 'development' ? `${connServer.urlAPI}:${connServer.port}` : `${connServer.urlAPI}`;
+//const url =  modo === 'development' ? `${connServer.urlAPI}:${connServer.port}` : `${connServer.urlAPI}`;
 const urlWS = modo === 'development' ? `${connServer.urlWebSocket}:${connServer.port}` : `${connServer.urlWebSocket}`;
-console.log("ws: ", url);
-let client = new W3CWebSocket(`ws://${urlWS}`); // "ws://192.168.0.15:8080"
+//console.log("ws: ", url);
+let client = undefined; // = new W3CWebSocket(`ws://${urlWS}`); // "ws://192.168.0.15:8080"
 const MAX_REINTENTOS = 10;
 const delay = retryCount => new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
 /**
@@ -20,7 +20,7 @@ const InitWS = () => {
 	const [retryCount, setRetryCount] = useState(1);
 
 	const ref = useRef(null);
-	console.log(`ws: user: ${data.client}`);
+	console.log(`ws: user: ${JSON.stringify(data)}`);
 
 	useEffect(() => {
 		if (!isOnline) {
@@ -29,18 +29,25 @@ const InitWS = () => {
 			client.onopen = () => {
 				console.log('WebSocket Client Connected');
 				setIsOnline(true)
+				console.log("use Effect local: " + JSON.stringify(data));
 			};
 
 			client.onmessage = (message) => {
+				try {
 				const dataFromServer = JSON.parse(message.data);
 				//const stateToChange = {};
-				console.log(dataFromServer);
+				console.log("from server: " + dataFromServer);
+				console.log("local: " +JSON.stringify(data));
 				if (dataFromServer !== undefined && dataFromServer.id === data.client.id) {
 					const p = data.client;
 					p.saldo = dataFromServer.saldo;
 					console.log("ws id == id " + p);
 					setData({...data, client: p}); // {...data, client: p} == {jwt: data.jwt, client: p}
 					//ref.current.click();
+				}
+				}
+				catch(err) {
+					console.log("ws error: ", err);
 				}
 			}
 

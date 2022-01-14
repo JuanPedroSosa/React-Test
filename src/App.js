@@ -66,55 +66,6 @@ function App() {
 		else setQueryStringQR("");
 	},[queryStringQR]);*/
 
-	/**
-	 * handleLogin recibe los datos del usuario/cliente que inicia la sesión
-	 * Luego se realiza un solicitud POST con el nro celular o correo
-	 * Si la autenticación es correcta el servidor responde con los datos del cliente
-	 * mas el token que será utilizado para realizar cualquier operación contra
-	 * el servidor
-	 * @param {*} usuario
-	 */
-	const handleLogin = async usuario => {
-		console.log(`sesion iniciada por users: ${usuario}`);
-/*
-		try {
-			const req = await requestLogin(usuario.username);
-			console.log("requestLogin: ", req);
-			if (req !== undefined && req.status !== "error") {
-				console.log("usuario ingresado:", req);
-				setState({...state, req});
-				//setData(response.client);
-				setData({client: req.client, jwt: req.jwt});
-				//setToken(req.jwt);
-				setInfo("");
-				setAutorizado(true);
-				console.log("usuario recordar?:",usuario.remember);
-				if (usuario.remember) {
-					setCookie("username", usuario.username, {"path": "/"});
-					setCookie("password", usuario.password, {"path": "/"});
-				}
-
-			}
-			else {
-				if (req !== undefined && req.message)
-					console.log("err autenticacion:",  req.message);
-				setInfo("Usuario o contraseña incorrecta"); //  + urlAPISessions
-				setAutorizado(false);
-			}
-		}
-		catch (err) {
-			// error de fetch devuelve un object y lo paso el string para mostrarlo en un alert
-			let error = err.toString();
-			if (error.toLowerCase().search("networkerror") !== -1)
-				error = "Sin conexión";
-
-			setInfo(error);
-			setAutorizado(false);
-		}
-		*/
-	}
-
-
 	//console.log("cookies: ", cookies.username, " ", cookies.password);
 	//console.log("state: ", state);
 	console.log("data: ", data);

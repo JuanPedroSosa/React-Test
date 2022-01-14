@@ -5,14 +5,13 @@ import { Navbar } from "../components/Navbar";
 //import ContextoQueryStringQR from "../queryStringQR";
 import { QueryStringContext } from "../queryStringContext";
 import { TireInflator } from "../TireInflator/TireInflator";
-import logo from '../midexqr.svg';
+import logo from "../midexqr.svg";
 import { HeaderSecondary } from "../components/HeaderSecondary";
 export const ServiceList = props => {
-	console.log("1. servicelist");
 	//const usuario = useContext(ContextoUsuario);
 	//const qs = useContext(ContextoQueryStringQR);
 	const { queryStringQR } = useContext(QueryStringContext);
-	console.log("2. servicelist QS: ", queryStringQR);
+	console.log("servicelist QS: ", queryStringQR);
 	return (
 		<>
 		<Navbar/>

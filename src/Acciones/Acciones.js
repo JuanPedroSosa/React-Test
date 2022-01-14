@@ -94,6 +94,7 @@ export const Acciones = props => {
 			version = resp[1];
 	}
 
+
 	const CleanQS = () => {
 		console.log("CleanQS");
 		setQueryStringQR("");
@@ -132,7 +133,7 @@ export const Acciones = props => {
 					<strong>{MESSAGE_SERVICE}</strong>
 				</div>
 				<img src={logoTiempo} className="m-2" style={{"width": 100, "height": 100}} alt="tiempo"/>
-				<h1 style={{"font-size": "100px"}}>{zeroPad(minutes)}:{zeroPad(seconds)}</h1>
+				<h1 style={{fontSize: "100px"}}>{zeroPad(minutes)}:{zeroPad(seconds)}</h1>
 				</div>
 				</>
 			);
@@ -158,7 +159,7 @@ export const Acciones = props => {
 		// no hace falta colocarlo en un try catch, viene en onError cualquier error fetch
 		mutate({regData: regData, jwt: data.jwt}, {
 			onSuccess: (data) => {
-				console.log(`requestAuthorization: Datos del servidor (${data})`);
+				console.log(`response Authorization: Datos del servidor (${JSON.stringify(data)})`);
 				if (data && data.status === "ok") {
 					setCountDown(data.data.tiempo * 1000 * 60); // minutos a ms
 					infoMsg =	data.message;

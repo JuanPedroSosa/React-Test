@@ -29,7 +29,7 @@ const LoginForm = ({setQueryStringQR, setData, setAutorizado}) => {
 	useEffect(() => {
 		const query = window.location.search.substring(1);
 		if (query !== undefined) {
-			console.log("login form useEffect: ", query);
+			console.log(`login form useEffect: ${query}`);
 			let qsDecode = CryptoJS.AES.decrypt(query, connServer.queryKey);
 			let originalText = qsDecode.toString(CryptoJS.enc.Utf8);
 			setQueryStringQR(originalText);
@@ -68,6 +68,14 @@ const LoginForm = ({setQueryStringQR, setData, setAutorizado}) => {
 			"remember": value
 		});
 	}
+	/**
+	 * handleSubmit procesa los datos del usuario/cliente que inicia la sesión
+	 * Luego se realiza un solicitud POST con el nro celular o correo
+	 * Si la autenticación es correcta el servidor responde con los datos del cliente
+	 * mas el token que será utilizado para realizar cualquier operación contra
+	 * el servidor
+	 * @param {*} e
+	 */
 
 	const handleSubmit = async (e) => {
 		setState({...state, isLoading: true});
@@ -84,7 +92,7 @@ const LoginForm = ({setQueryStringQR, setData, setAutorizado}) => {
 					setData({client: data.client, jwt: data.jwt});
 					setMsg("");
 					setAutorizado(true);
-					console.log("usuario recordar?:",state.remember);
+					console.log("usuario recordar?:", state.remember);
 					if (state.remember) {
 						setCookie("username", state.username, {"path": "/"});
 						setCookie("password", state.password, {"path": "/"});
